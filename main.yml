@@ -1,0 +1,3 @@
+- hosts: summit
+  tasks:
+    - include: jetsons.yml

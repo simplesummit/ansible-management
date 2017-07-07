@@ -1,0 +1,54 @@
+# - apt_repository:
+#     repo: "{{item}}"
+#   name: enable multiverse repos
+#   register: multiverse_installed
+#   update_cache: false  # We will do ourselfs afterwards
+#   when: ansible_distribution == 'Ubuntu'
+#   with_items:
+#     - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
+#     - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
+#     - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
+#     - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
+#
+# - apt:
+#     update_cache: true
+#   when: multiverse_installed | changed
+
+- name: install user packages
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - htop
+    - tmux
+    - vim
+    - zsh
+  become: yes
+
+############
+# Passwordless sudo for ansible
+# you may need to run ansible with -K on the first run
+- name: nopasswdsudo in sudoers.d/
+  copy:
+    src: files/nopasswd-sudo
+    dest: /etc/sudoers.d/nopasswd-sudo
+    owner: root
+    group: root
+    mode: 440
+  become: yes
+  become_user: root
+
+- name: group nopasswdsudo
+  group:
+    name: "nopasswdsudo"
+    state: present
+  become: yes
+
+- name: user added to nopasswdsudo group
+  user:
+    name: "{{ lookup('env','USER') }}"
+    groups: "sudo,nopasswdsudo"
+    append: yes
+    state: present
+    createhome: yes
+  become: yes
