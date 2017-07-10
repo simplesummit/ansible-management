@@ -52,3 +52,35 @@
     state: present
     createhome: yes
   become: yes
+
+############
+# Python things setup
+- name: python apt packages
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - python3-pip
+    - python3-numpy
+    - python3-virtualenv
+  become: yes
+
+############
+# Development packages
+- name: development apt packages
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - autoconf
+    - automake
+    - libtool
+    - wget
+    - curl
+    - make
+    - g++
+    - unzip
+    - zlib1g-dev
+    - git
+    - python
+  become: yes
