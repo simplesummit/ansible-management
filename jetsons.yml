@@ -1,3 +1,12 @@
+# Jetson TX2 ansible script
+#
+# On first run, pass -K so ansible can set up passwordless sudo
+#
+# Any item which requires root privs should use become: yes
+#
+# Octal file permissions require a leading zero
+#
+
 # - apt_repository:
 #     repo: "{{item}}"
 #   name: enable multiverse repos
@@ -34,20 +43,20 @@
     dest: /etc/sudoers.d/nopasswd-sudo
     owner: root
     group: root
-    mode: 440
+    mode: 0440
   become: yes
   become_user: root
 
-- name: group nopasswdsudo
+- name: group summit
   group:
-    name: "nopasswdsudo"
+    name: "summit"
     state: present
   become: yes
 
 - name: user added to nopasswdsudo group
   user:
     name: "{{ lookup('env','USER') }}"
-    groups: "sudo,nopasswdsudo"
+    groups: "sudo,summit"
     append: yes
     state: present
     createhome: yes
@@ -83,4 +92,49 @@
     - zlib1g-dev
     - git
     - python
+  become: yes
+
+############
+# Jetson clockspeed settings
+- name: ensure /summit dir exists
+  file:
+    path: /summit
+    state: directory
+    mode: "02775" # setgid rwx rwx r-x
+  become: yes
+- name: ensure /summit/jetson_clock_configs dir exists
+  file:
+    path: /summit/jetson_clock_configs
+    state: directory
+    mode: "02775" # setgid rwx rwx r-x
+  become: yes
+- name: copy jetson clock configs
+  copy:
+    src: "{{item}}"
+    dest: "/summit/{{item}}"
+    owner: root
+    group: summit
+    mode: 0664 # rw- rw- r--
+  with_items:
+    - jetson_clock_configs/settings-boot-default
+    - jetson_clock_configs/settings-max
+    - jetson_clock_configs/settings-low
+  become: no
+- name: jetson clocks script
+  copy:
+    src: "jetson_clocks.sh"
+    dest: "/summit/jetson_clocks.sh"
+    owner: root
+    group: summit
+    # setuid root for those in summit group
+    mode: "0774" # rwx rwx r--
+  become: yes
+- name: symlink jetson_clocks in usr/local/bin
+  file:
+    src: /summit/jetson_clocks.sh
+    dest: /usr/local/bin/jetson_clocks
+    owner: root
+    group: summit
+    state: link
+    mode: "0755" # rwx r-x r-x
   become: yes

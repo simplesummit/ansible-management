@@ -1,1 +1,1 @@
-%nopasswdsudo ALL=(ALL) NOPASSWD:ALL
+%summit ALL=(ALL) NOPASSWD:ALL
