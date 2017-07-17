@@ -127,7 +127,7 @@
     group: "{{projectgroup}}"
     mode: 0664 # rw- rw- r--
   with_items:
-    - jetson_settings/clock-boot-default
+    - jetson_settings/clock-idle
     - jetson_settings/clock-max
     - jetson_settings/clock-low
   become: yes
