@@ -100,12 +100,16 @@
   file:
     path: /summit
     state: directory
+    owner: root
+    group: summit
     mode: "02775" # setgid rwx rwx r-x
   become: yes
-- name: ensure /summit/jetson_clock_configs dir exists
+- name: ensure jetson_settings dir exists
   file:
-    path: /summit/jetson_clock_configs
+    path: /summit/jetson_settings
     state: directory
+    owner: root
+    group: summit
     mode: "02775" # setgid rwx rwx r-x
   become: yes
 - name: copy jetson clock configs
@@ -116,17 +120,16 @@
     group: summit
     mode: 0664 # rw- rw- r--
   with_items:
-    - jetson_clock_configs/settings-boot-default
-    - jetson_clock_configs/settings-max
-    - jetson_clock_configs/settings-low
-  become: no
+    - jetson_settings/clock-boot-default
+    - jetson_settings/clock-max
+    - jetson_settings/clock-low
+  become: yes
 - name: jetson clocks script
   copy:
     src: "jetson_clocks.sh"
     dest: "/summit/jetson_clocks.sh"
     owner: root
     group: summit
-    # setuid root for those in summit group
     mode: "0774" # rwx rwx r--
   become: yes
 - name: symlink jetson_clocks in usr/local/bin
