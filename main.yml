@@ -1,3 +1,20 @@
-- hosts: summit
+- hosts: master
   tasks:
     - include: jetsons.yml
+    - include: jetsons-master.yml
+  vars:
+    projectroot: /leconte
+    projectgroup: leconte
+    projectgid: 3004
+  tags: [master]
+
+- hosts: compute
+  tasks:
+    - include: jetsons.yml
+    - include: jetsons-compute.yml
+  vars:
+    projectroot: /leconte
+    projectgroup: leconte
+    projectgid: 3004
+    masternode: leconte-smokies.local
+  tags: [compute]

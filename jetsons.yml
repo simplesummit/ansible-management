@@ -7,6 +7,25 @@
 # Octal file permissions require a leading zero
 #
 
+- name: "group {{projectgroup}}"
+  group:
+    name: "{{projectgroup}}"
+    gid: "{{projectgid}}"
+    state: present
+  become: yes
+
+- name: "user added to {{projectgroup}} group"
+  user:
+    name: "{{item}}"
+    groups: "sudo,{{projectgroup}}"
+    append: yes
+    state: present
+    createhome: yes
+  with_items:
+    - "{{ lookup('env','USER') }}"
+    - nvidia
+  become: yes
+
 # - apt_repository:
 #     repo: "{{item}}"
 #   name: enable multiverse repos
@@ -33,6 +52,7 @@
     - vim
     - zsh
   become: yes
+  tags: [apt]
 
 ############
 # Passwordless sudo for ansible
@@ -47,21 +67,6 @@
   become: yes
   become_user: root
 
-- name: group summit
-  group:
-    name: "summit"
-    state: present
-  become: yes
-
-- name: user added to nopasswdsudo group
-  user:
-    name: "{{ lookup('env','USER') }}"
-    groups: "sudo,summit"
-    append: yes
-    state: present
-    createhome: yes
-  become: yes
-
 ############
 # Python things setup
 - name: python apt packages
@@ -73,6 +78,7 @@
     - python3-numpy
     - python3-virtualenv
   become: yes
+  tags: [apt]
 
 ############
 # Development packages
@@ -93,31 +99,32 @@
     - git
     - python
   become: yes
+  tags: [apt]
 
 ############
 # Jetson clockspeed settings
-- name: ensure /summit dir exists
+- name: "ensure {{projectroot}} dir exists"
   file:
-    path: /summit
+    path: "{{projectroot}}"
     state: directory
     owner: root
-    group: summit
+    group: "{{projectgroup}}"
     mode: "02775" # setgid rwx rwx r-x
   become: yes
 - name: ensure jetson_settings dir exists
   file:
-    path: /summit/jetson_settings
+    path: "{{projectroot}}/jetson_settings"
     state: directory
     owner: root
-    group: summit
+    group: "{{projectgroup}}"
     mode: "02775" # setgid rwx rwx r-x
   become: yes
 - name: copy jetson clock configs
   copy:
     src: "{{item}}"
-    dest: "/summit/{{item}}"
+    dest: "{{projectroot}}/{{item}}"
     owner: root
-    group: summit
+    group: "{{projectgroup}}"
     mode: 0664 # rw- rw- r--
   with_items:
     - jetson_settings/clock-boot-default
@@ -127,17 +134,17 @@
 - name: jetson clocks script
   copy:
     src: "jetson_clocks.sh"
-    dest: "/summit/jetson_clocks.sh"
+    dest: "{{projectroot}}/jetson_clocks.sh"
     owner: root
-    group: summit
+    group: "{{projectgroup}}"
     mode: "0774" # rwx rwx r--
   become: yes
 - name: symlink jetson_clocks in usr/local/bin
   file:
-    src: /summit/jetson_clocks.sh
+    src: /leconte/jetson_clocks.sh
     dest: /usr/local/bin/jetson_clocks
     owner: root
-    group: summit
+    group: "{{projectgroup}}"
     state: link
     mode: "0755" # rwx r-x r-x
   become: yes

@@ -1,0 +1,31 @@
+############
+# Configuration for compute nodes
+
+############
+# Network filesystem mounted
+- name: nfs client package
+  apt:
+    name: "nfs-common"
+    state: latest
+  become: yes
+  tags: [nfs, apt]
+
+- name: "nfs directory {{projectroot}}/shared"
+  file:
+    path: "{{projectroot}}/shared"
+    owner: root
+    group: "{{projectgroup}}"
+    mode: "02775" # setgid rwx rwx r-x
+    state: directory
+  become: yes
+  tags: [nfs]
+
+- name: nfs mount in fstab
+  mount:
+    name: "{{projectroot}}/shared"
+    src: "{{masternode}}:{{projectroot}}/shared"
+    fstype: nfs
+    opts: rw,sync
+    state: mounted
+  become: yes
+  tags: [nfs]

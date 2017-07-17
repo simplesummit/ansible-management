@@ -1,0 +1,33 @@
+############
+# Configuration for main/head jetson node
+
+############
+# NFS server setup
+- name: nfs server packages
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - nfs-kernel-server
+    - nfs-common
+  become: yes
+  tags: [nfs, apt]
+
+- name: "nfs directory {{projectroot}}/shared"
+  file:
+    path: "{{projectroot}}/shared"
+    owner: root
+    group: "{{projectgroup}}"
+    mode: "02775" # setgid rwx rwx r-x
+    state: directory
+  become: yes
+  tags: [nfs]
+
+- name: nfs line in /etc/exports
+  lineinfile:
+    path: /etc/exports
+    regexp: '^{{projectroot}}/shared'
+    line: "{{projectroot}}/shared *(rw,sync)"
+    state: present
+  become: yes
+  tags: [nfs]

@@ -1,4 +1,7 @@
-# summit-ansible
-Ansible management for Sub Summit
+# leconte-ansible
+Ansible management for LeConte, the miniature Summit.
 
-Add your SSH key to the root user on all of your cluster nodes.
+First, update your hosts file to be correct for the setup.
+
+On first run:
+`ansible-playbook -i hosts main.yml`

@@ -1,3 +1,6 @@
-[summit]
-summit-smokies.local
-summit-k2.local
+
+[master]
+leconte-smokies.local
+
+[compute]
+leconte-k2.local
