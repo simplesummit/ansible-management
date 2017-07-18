@@ -98,6 +98,8 @@
     - zlib1g-dev
     - git
     - python
+    - ttf-ubuntu-font-family
+    - fonts-ubuntu-font-family-console
   become: yes
   tags: [apt]
 
