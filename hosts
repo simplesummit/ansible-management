@@ -4,3 +4,4 @@ leconte-smokies.local
 
 [compute]
 leconte-k2.local
+leconte-brune.local ansible_user=nvidia
