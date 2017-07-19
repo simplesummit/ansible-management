@@ -100,6 +100,9 @@
     - python
     - ttf-ubuntu-font-family
     - fonts-ubuntu-font-family-console
+    - libsdl2-dev
+    - mpich
+    - libsdl2-ttf-dev
   become: yes
   tags: [apt]
 
