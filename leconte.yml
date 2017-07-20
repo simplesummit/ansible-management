@@ -1,0 +1,36 @@
+############
+# Application dependencies
+- name: Package liblz4-leconte into shared directory
+  copy:
+    src: "liblz4-leconte_1.7.5_arm64.deb"
+    dest: "/leconte/shared/liblz4-leconte_1.7.5_arm64.deb"
+    owner: nvidia
+    group: "{{projectgroup}}"
+    mode: "0775"
+  become: true
+  when:
+    - "'master' in group_names"
+  tags: [apt]
+
+- name:  Check if liblz4-leconte is installed
+  command: dpkg-query -W liblz4-leconte
+  register: liblz4_leconte_check_deb
+  failed_when: liblz4_leconte_check_deb.rc > 1
+  changed_when: liblz4_leconte_check_deb.rc == 1
+
+- name: remove conflicting liblz4-dev
+  apt:
+    name: "{{item}}"
+    state: absent
+  with_items:
+    - liblz4-dev
+  become: true
+  tags: [apt]
+
+- name: Install new liblz4-leconte
+  apt:
+    deb: "/leconte/shared/liblz4-leconte_1.7.5_arm64.deb"
+  become: true
+  when:
+    - liblz4_leconte_check_deb.rc == 1
+  tags: [apt]

@@ -1,7 +1,10 @@
 
+[jetsons:children]
+master
+
 [master]
 leconte-smokies.local
 
-[compute]
+[jetsons]
 leconte-k2.local
-leconte-brune.local ansible_user=nvidia
+leconte-brune.local

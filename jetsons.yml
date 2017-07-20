@@ -12,7 +12,7 @@
     name: "{{projectgroup}}"
     gid: "{{projectgid}}"
     state: present
-  become: yes
+  become: true
 
 - name: "user added to {{projectgroup}} group"
   user:
@@ -24,34 +24,20 @@
   with_items:
     - "{{ lookup('env','USER') }}"
     - nvidia
-  become: yes
-
-# - apt_repository:
-#     repo: "{{item}}"
-#   name: enable multiverse repos
-#   register: multiverse_installed
-#   update_cache: false  # We will do ourselfs afterwards
-#   when: ansible_distribution == 'Ubuntu'
-#   with_items:
-#     - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
-#     - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}} multiverse'
-#     - 'deb http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
-#     - 'deb-src http://archive.ubuntu.com/ubuntu {{ansible_distribution_release}}-updates multiverse'
-#
-# - apt:
-#     update_cache: true
-#   when: multiverse_installed | changed
+  become: true
 
 - name: install user packages
   apt:
     name: "{{item}}"
     state: latest
   with_items:
+    - traceroute
+    - iperf
     - htop
     - tmux
     - vim
     - zsh
-  become: yes
+  become: true
   tags: [apt]
 
 ############
@@ -64,7 +50,7 @@
     owner: root
     group: root
     mode: 0440
-  become: yes
+  become: true
   become_user: root
 
 ############
@@ -74,10 +60,11 @@
     name: "{{item}}"
     state: latest
   with_items:
+    - python-pip
     - python3-pip
     - python3-numpy
     - python3-virtualenv
-  become: yes
+  become: true
   tags: [apt]
 
 ############
@@ -103,7 +90,7 @@
     - libsdl2-dev
     - mpich
     - libsdl2-ttf-dev
-  become: yes
+  become: true
   tags: [apt]
 
 ############
@@ -115,7 +102,7 @@
     owner: root
     group: "{{projectgroup}}"
     mode: "02775" # setgid rwx rwx r-x
-  become: yes
+  become: true
 - name: ensure jetson_settings dir exists
   file:
     path: "{{projectroot}}/jetson_settings"
@@ -123,7 +110,7 @@
     owner: root
     group: "{{projectgroup}}"
     mode: "02775" # setgid rwx rwx r-x
-  become: yes
+  become: true
 - name: copy jetson clock configs
   copy:
     src: "{{item}}"
@@ -134,8 +121,9 @@
   with_items:
     - jetson_settings/clock-idle
     - jetson_settings/clock-max
+    - jetson_settings/clock-gpu-max
     - jetson_settings/clock-low
-  become: yes
+  become: true
 - name: jetson clocks script
   copy:
     src: "jetson_clocks.sh"
@@ -143,7 +131,7 @@
     owner: root
     group: "{{projectgroup}}"
     mode: "0774" # rwx rwx r--
-  become: yes
+  become: true
 - name: symlink jetson_clocks in usr/local/bin
   file:
     src: /leconte/jetson_clocks.sh
@@ -152,4 +140,4 @@
     group: "{{projectgroup}}"
     state: link
     mode: "0755" # rwx r-x r-x
-  become: yes
+  become: true

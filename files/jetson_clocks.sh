@@ -55,17 +55,21 @@ EOF
 
 restore()
 {
+	IFS=$'\n'
 	for conf in `cat "${CONF_FILE}"`; do
 		file=`echo $conf | cut -f1 -d :`
 		data=`echo $conf | cut -f2 -d :`
 		case "${file}" in
+			"#"*)
+				echo -e ${BBLUE}"${conf}"${NC}
+				;;
 			/sys/devices/system/cpu/cpu*/online |\
 			/sys/kernel/debug/clock/override*/state )
 				if [ `cat $file` -ne $data ]; then
 					echo "${data}" > "${file}"
 				fi
 				;;
-			*)
+			/sys/*)
 				echo "${data}" > "${file}"
 				ret=$?
 				if [ ${ret} -ne 0 ]; then
@@ -74,6 +78,7 @@ restore()
 				;;
 		esac
 	done
+	unset IFS
 }
 
 store()
@@ -340,16 +345,16 @@ main ()
 	check_uptime
 	while [ -n "$1" ]; do
 		case "$1" in
-			--show)
+			--show|--list|-ls)
 				echo "SOC family:${SOCFAMILY}  Machine:${machine}"
 				ACTION=show
 				;;
-			--store)
+			--store|--save)
 				[ -n "$2" ] && CONF_FILE=$2
 				ACTION=store
 				shift 1
 				;;
-			--restore)
+			--restore|--set|--load|-s)
 				[ -n "$2" ] && CONF_FILE=$2
 				ACTION=restore
 				shift 1

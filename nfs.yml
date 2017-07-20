@@ -1,0 +1,55 @@
+############
+# Network filesystem directory
+- name: nfs client package
+  apt:
+    name: "nfs-common"
+    state: latest
+  become: yes
+  tags: [nfs, apt]
+
+- name: "nfs directory {{projectroot}}/shared"
+  file:
+    path: "{{projectroot}}/shared"
+    owner: root
+    group: "{{projectgroup}}"
+    mode: "02775" # setgid rwx rwx r-x
+    state: directory
+  become: yes
+  tags: [nfs]
+
+############
+# Configuration for main/head jetson node
+- name: "master: nfs server packages"
+  apt:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - nfs-kernel-server
+  become: yes
+  when:
+    - "'master' in group_names"
+  tags: [nfs, apt]
+
+- name: "master: nfs line in /etc/exports"
+  lineinfile:
+    path: /etc/exports
+    regexp: '^{{projectroot}}/shared'
+    line: "{{projectroot}}/shared *(rw,sync)"
+    state: present
+  become: yes
+  when: "'master' in group_names"
+  tags: [nfs]
+
+############
+# Configuration for compute nodes
+- name: "nfs clients: nfs mount in fstab"
+  mount:
+    name: "{{projectroot}}/shared"
+    src: "{{masternode}}:{{projectroot}}/shared"
+    fstype: nfs
+    opts: rw,sync
+    state: mounted
+  become: yes
+  when:
+    - "'master' not in group_names"
+  tags: [nfs]

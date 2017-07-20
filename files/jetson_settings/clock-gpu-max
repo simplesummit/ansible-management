@@ -1,15 +1,18 @@
-# Set all cpus to userspace gonvernor
+# Set all cpus to schedutil
 /sys/devices/system/cpu/cpu1/online:1
 /sys/devices/system/cpu/cpu2/online:1
 /sys/devices/system/cpu/cpu3/online:1
 /sys/devices/system/cpu/cpu4/online:1
 /sys/devices/system/cpu/cpu5/online:1
-/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor:userspace
-/sys/devices/system/cpu/cpu1/cpufreq/scaling_governor:userspace
-/sys/devices/system/cpu/cpu2/cpufreq/scaling_governor:userspace
-/sys/devices/system/cpu/cpu3/cpufreq/scaling_governor:userspace
-/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor:userspace
-/sys/devices/system/cpu/cpu5/cpufreq/scaling_governor:userspace
+/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor:schedutil
+/sys/devices/system/cpu/cpu1/cpufreq/scaling_governor:schedutil
+/sys/devices/system/cpu/cpu2/cpufreq/scaling_governor:schedutil
+/sys/devices/system/cpu/cpu3/cpufreq/scaling_governor:schedutil
+/sys/devices/system/cpu/cpu4/cpufreq/scaling_governor:schedutil
+/sys/devices/system/cpu/cpu5/cpufreq/scaling_governor:schedutil
+# Disable cores 1,2
+/sys/devices/system/cpu/cpu1/online:0
+/sys/devices/system/cpu/cpu2/online:0
 # QOS off
 /sys/module/qos/parameters/enable:N
 /sys/kernel/debug/tegra_cpufreq/M_CLUSTER/cc3/enable:0
@@ -20,5 +23,5 @@
 /sys/kernel/debug/bpmp/debug/clk/gpcclk/mrq_rate_locked:1
 /sys/kernel/debug/bpmp/debug/clk/emc/rate:1866000000
 /sys/kernel/debug/bpmp/debug/clk/emc/mrq_rate_locked:1
-Fan speed max 255 / 255
+# Max fan speed 255 / 255
 /sys/kernel/debug/tegra_fan/target_pwm:255
