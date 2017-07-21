@@ -22,8 +22,30 @@
     state: present
     createhome: yes
   with_items:
-    - "{{ lookup('env','USER') }}"
-    - nvidia
+    - "{{ansible_user}}"
+  become: true
+
+- name: ensure apt multiverse is enabled
+  apt_repository:
+    repo: "{{item}}"
+    state: present
+    update_cache: false
+  register: multiverse_installed
+  with_items:
+    - deb http://ports.ubuntu.com/ubuntu-ports/ xenial main restricted multiverse universe
+    - deb-src http://ports.ubuntu.com/ubuntu-ports/ xenial main restricted multiverse universe
+    - deb http://ports.ubuntu.com/ubuntu-ports/ xenial-updates main restricted multiverse universe
+    - deb-src http://ports.ubuntu.com/ubuntu-ports/ xenial-updates main restricted multiverse universe
+    - deb http://ports.ubuntu.com/ubuntu-ports/ xenial-security main restricted multiverse universe
+    - deb-src http://ports.ubuntu.com/ubuntu-ports/ xenial-security main restricted multiverse universe
+  become: true
+  tags: [apt]
+
+- name: update apt cache
+  apt:
+    update_cache: true
+  when:
+    - multiverse_installed | changed
   become: true
 
 - name: install user packages
@@ -61,6 +83,7 @@
     state: latest
   with_items:
     - python-pip
+    - python3-apt
     - python3-pip
     - python3-numpy
     - python3-virtualenv
@@ -84,7 +107,6 @@
     - unzip
     - zlib1g-dev
     - git
-    - python
     - ttf-ubuntu-font-family
     - fonts-ubuntu-font-family-console
     - libsdl2-dev

@@ -34,3 +34,19 @@
   when:
     - liblz4_leconte_check_deb.rc == 1
   tags: [apt]
+
+############
+# Sweet motd bro
+- file:
+    state: absent
+    path: /etc/update-motd.d/10-help-text
+  become: true
+
+- name: LeConte MOTD
+  copy:
+    src: motd/31-leconte
+    dest: /etc/update-motd.d/31-leconte
+    mode: "0755"
+    owner: root
+    group: root
+  become: true

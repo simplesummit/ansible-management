@@ -1,0 +1,15 @@
+#!/bin/bash
+
+RED='\e[0;31m';GREEN='\e[0;32m';BLUE='\e[0;34m';BRED='\e[1;31m';BGREEN='\e[1;32m';BBLUE='\e[1;34m';NC='\e[0m' # No Color
+
+echo -e ${GREEN}"\
+    __         ______            __
+   / /   ___  / ____/___  ____  / /____
+  / /   / _ \/ /   / __ \/ __ \/ __/ _ \\
+ / /___/  __/ /___/ /_/ / / / / /_/  __/
+/_____/\___/\____/\____/_/ /_/\__/\___/
+"${NC}
+
+echo -e "Welcome to "${BGREEN}"$(hostname)"${NC}
+echo -e "APT cache last updated on "${BBLUE}$(ls -l /var/lib/apt/periodic/update-success-stamp | awk '{print $6" "$7" "$8}')${NC}
+echo "Online CPUs: `cat /sys/devices/system/cpu/online`"

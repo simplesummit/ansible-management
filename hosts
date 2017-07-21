@@ -3,8 +3,9 @@
 master
 
 [master]
-leconte-smokies.local
+leconte-smokies.local ansible_user=nvidia
 
 [jetsons]
-leconte-k2.local
-leconte-brune.local
+leconte-k2.local ansible_user=nvidia
+leconte-brune.local ansible_user=nvidia
+leconte-ural.local ansible_user=nvidia
