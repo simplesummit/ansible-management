@@ -112,6 +112,7 @@
     - libsdl2-dev
     - mpich
     - libsdl2-ttf-dev
+    - libnotify-bin
   become: true
   tags: [apt]
 
