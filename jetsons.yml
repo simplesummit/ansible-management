@@ -57,9 +57,9 @@
     - iperf
     - 2ping
     - htop
+    - notification-daemon
     - tmux
     - vim
-    - xfce4-notifyd
     - zsh
   become: true
   tags: [apt]
