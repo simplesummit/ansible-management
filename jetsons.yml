@@ -55,9 +55,11 @@
   with_items:
     - traceroute
     - iperf
+    - 2ping
     - htop
     - tmux
     - vim
+    - xfce4-notifyd
     - zsh
   become: true
   tags: [apt]
