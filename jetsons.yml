@@ -115,6 +115,7 @@
     - mpich
     - libsdl2-ttf-dev
     - libnotify-bin
+    - libglfw3-dev
   become: true
   tags: [apt]
 
