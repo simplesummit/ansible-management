@@ -10,3 +10,5 @@ leconte-k2.local ansible_user=nvidia
 leconte-brune.local ansible_user=nvidia
 leconte-ural.local ansible_user=nvidia
 leconte-fiji.local ansible_user=nvidia
+leconte-mim ansible_user=nvidia
+leconte-matterhorn ansible_user=nvidia
