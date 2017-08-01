@@ -1,6 +1,8 @@
 #!/bin/bash
 ### startup.sh -- is called on boot on the head node,
-#              -- which 
+#              -- which starts the whole application
+# 
+#
 
 # some common files
 SHDIR="/leconte/shared"
