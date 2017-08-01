@@ -17,7 +17,7 @@ hosts=($(cat $HOST_FILE | awk '{printf $1" "}'))
 NSARGS="-i face-monkey fractalexplorer"
 
 # arguments to fractalexplorer
-FEARGS="-i1000 -k72 -crandom -F -L -P $SHDIR/default.frpath -ecuda -v3"
+FEARGS="-i1000 -k72 -crandom -F -L -P $SHDIR/share/fractalexplorer/default.frpath -ecuda -v5"
 
 # Sometimes, we must run the notification daemon
 #/usr/lib/notification-daemon/notification-daemon -r &
@@ -58,7 +58,7 @@ while test $keep_going -ne 0 ; do
     done
     # wait a little while, so we don't spam
     if test $keep_going -ne 0 ; then
-        sleep 3
+        sleep 1
     fi
 done
 
@@ -82,12 +82,12 @@ while test $keep_going -ne 0 ; do
     $SHDIR/runoncluster -N 1 sudo /leconte/jetson_clocks.sh --restore /leconte/jetson_settings/clock-gpu-max
     keep_going=$?
     if test $keep_going -ne 0 ; then
-        sleep 2
+        sleep 1
     fi
 done
 
 # sleep, and wait for clock to take effect
-sleep 4
+sleep 3
 
 # reset loop variable
 keep_going=1
@@ -105,7 +105,7 @@ while test $keep_going -ne 0 ; do
         fi
     done
 
-    sleep 1
+    #sleep 1
     echo "---------------------------" >> $LOGFILE
     echo "starting..." >> $LOGFILE
     echo "---------------------------" >> $LOGFILE
