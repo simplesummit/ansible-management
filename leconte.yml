@@ -51,3 +51,14 @@
     owner: root
     group: root
   become: true
+
+############
+# Startup manager script
+- name: startup script
+  copy:
+    src: startup.sh
+    dest: "{{projectroot}}/startup.sh"
+    mode: "0775"
+    owner: root
+    group: "{{projectgroup}}"
+  become: true
