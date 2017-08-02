@@ -12,7 +12,7 @@
 ##
 
 # where the host file is located
-HOSTFILE="/leconte/hostfile"
+HOSTFILE="/leconte/shared/hostfile"
 
 # arguments to MPI run
 # plm_rsh_no_tree_spawn 1 means that during spawning,
