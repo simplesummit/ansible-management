@@ -53,12 +53,15 @@
   become: true
 
 ############
-# Startup manager script
-- name: startup script
+# LeConte utility
+- name: "LeConte files in {{projectroot}}"
   copy:
-    src: startup.sh
-    dest: "{{projectroot}}/startup.sh"
+    src: "{{item}}"
+    dest: "{{projectroot}}/{{item}}"
     mode: "0775"
     owner: root
     group: "{{projectgroup}}"
+  with_items:
+    - startup.sh
+    - runoncluster
   become: true
