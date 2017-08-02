@@ -5,7 +5,8 @@
 #
 
 # some common files
-SHDIR="/leconte/shared"
+LDIR="/leconte"
+SHDIR="$LDIR/shared"
 HOST_FILE="$SHDIR/hostfile"
 LOGFILE="/tmp/fractalexplorer.log"
 
@@ -79,7 +80,7 @@ keep_going=1
 
 # wait for them to set clocks. This tests whether MPI can run
 while test $keep_going -ne 0 ; do
-    $SHDIR/runoncluster -N 1 sudo /leconte/jetson_clocks.sh --restore /leconte/jetson_settings/clock-gpu-max
+    $LDIR/runoncluster -N 1 sudo $LDIR/jetson_clocks.sh --restore $LDIR/jetson_settings/clock-gpu-max
     keep_going=$?
     if test $keep_going -ne 0 ; then
         sleep 1
@@ -98,7 +99,7 @@ while test $keep_going -ne 0 ; do
     inner_keep_going=1
     while test $inner_keep_going -ne 0 ; do
         # try to set max clock
-        $SHDIR/runoncluster -N 1 sudo /leconte/jetson_clocks.sh --restore /leconte/jetson_settings/clock-gpu-max
+        $LDIR/runoncluster -N 1 sudo $LDIR/jetson_clocks.sh --restore $LDIR/jetson_settings/clock-gpu-max
         inner_keep_going=$?
         if test $inner_keep_going -ne 0 ; then
             sleep 2
@@ -111,7 +112,7 @@ while test $keep_going -ne 0 ; do
     echo "---------------------------" >> $LOGFILE
 
     # actually run the program
-    $SHDIR/runoncluster $SHDIR/bin/fractalexplorer $FEARGS >> $LOGFILE 2>&1
+    $LDIR/runoncluster $SHDIR/bin/fractalexplorer $FEARGS >> $LOGFILE 2>&1
     keep_going=$?
     if test $keep_going -ne 0 ; then
         sleep 2

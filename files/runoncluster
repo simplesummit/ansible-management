@@ -1,0 +1,29 @@
+#!/bin/bash
+##
+#
+# Runs the command on all hosts connected
+#
+# So, run ./runoncluster -N 1 bash -c 'echo my rank: $OMPI_COMM_WORLD_RANK'
+# and you will see each computers rank
+#
+# this returns the mpirun exit code,
+# so zero on a peaceful exit
+#
+##
+
+# where the host file is located
+HOSTFILE="/leconte/hostfile"
+
+# arguments to MPI run
+# plm_rsh_no_tree_spawn 1 means that during spawning,
+# they are all launched from the head node, which is 
+# neccesary for using 3 or more nodes
+MPIRUNARGS="-mca plm_rsh_no_tree_spawn 1"
+
+
+# "$@" is whatever comes after the script
+mpirun $MPIRUNARGS --hostfile $HOSTFILE "$@" 
+
+# return the exit code from mpirun
+exit $?
+
