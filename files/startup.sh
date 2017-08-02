@@ -90,6 +90,9 @@ done
 # sleep, and wait for clock to take effect
 sleep 3
 
+sudo xboxdrv --silent &
+xboxdrv_pid=$!
+
 # reset loop variable
 keep_going=1
 
@@ -122,6 +125,8 @@ done
 # notify that we are ending
 notify-send $NSARGS -t 2500 "shutting down"
 echo "done running fractalexplorer"
+
+kill -9 $xboxdrv_pid
 
 
 
