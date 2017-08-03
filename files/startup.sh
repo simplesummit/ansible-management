@@ -18,7 +18,7 @@ hosts=($(cat $HOST_FILE | awk '{printf $1" "}'))
 NSARGS="-i face-monkey fractalexplorer"
 
 # arguments to fractalexplorer
-FEARGS="-i1000 -k72 -crandom -F -L -P $SHDIR/share/fractalexplorer/default.frpath -ecuda -v5"
+FEARGS="-i100 -k72 -crandom -F -L -P $SHDIR/share/fractalexplorer/default.frpath -ecuda -v5"
 
 # Sometimes, we must run the notification daemon
 #/usr/lib/notification-daemon/notification-daemon -r &
