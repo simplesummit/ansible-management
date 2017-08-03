@@ -135,7 +135,6 @@ echo "done running fractalexplorer"
 
 kill -9 $xboxdrv_pid
 
-
-wait
+exit 0
 
 
