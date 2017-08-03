@@ -67,6 +67,13 @@ echo ""
 echo "all hosts connected"
 echo ""
 
+# we keep this loop going so that it doesn't time out
+
+for host in ${hosts[*]}; do
+    ping $host 2>&1 > /dev/null &
+done
+
+
 # 
 #notify-send $NSARGS "all hosts connected"
 
@@ -128,5 +135,7 @@ echo "done running fractalexplorer"
 
 kill -9 $xboxdrv_pid
 
+
+wait
 
 
